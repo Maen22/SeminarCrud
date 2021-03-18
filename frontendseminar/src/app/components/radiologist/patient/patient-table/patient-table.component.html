@@ -102,11 +102,8 @@
         <th pSortableColumn="date">
           Date <p-sortIcon field="date"></p-sortIcon>
         </th>
-        <th pSortableColumn="typeOfXRay">
-          Type Of X-Ray <p-sortIcon field="typeOfXRay"></p-sortIcon>
-        </th>
         <th pSortableColumn="cost">
-          Cost <p-sortIcon field="cost"></p-sortIcon>
+          Total Cost <p-sortIcon field="cost"></p-sortIcon>
         </th>
 
         <th></th>
@@ -128,11 +125,7 @@
         <td>{{ patient.age }}</td>
         <td>{{ patient.gender == 1 ? "Male" : "Female" }}</td>
         <td>{{ patient.createdAt | date: "yyyy-MM-dd" }}</td>
-
-        <!-- This should come from api/Treatments -->
-        <!-- <td>{{ patient.typeOfXRay.name }}</td> -->
-        <!-- <td>{{ patient.cost | currency: "USD" }}</td> -->
-        <!-- Delete and Edit Buttons -->
+        <td *ngIf="patients">{{ getTotalCost(patient.patientId) }}</td>
 
         <td>
           <button

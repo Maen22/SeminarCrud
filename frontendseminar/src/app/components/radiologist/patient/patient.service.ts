@@ -49,6 +49,20 @@ export class PatientService {
       .then((data) => data);
   }
 
+  getTreatmentsTotalCost(patientId: number): number {
+    let totalCost = 0;
+    this.http
+      .get<{ value: number }>(
+        this.baseUrl + `api/treatments/patient/${patientId}/totalcost`
+      )
+      .toPromise()
+      .then((data) => {
+        totalCost = data.value;
+      });
+
+    return totalCost;
+  }
+
   createPatient(patient: Patient): void {
     this.http
       .post<Patient>(this.baseUrl + 'api/patients', patient)

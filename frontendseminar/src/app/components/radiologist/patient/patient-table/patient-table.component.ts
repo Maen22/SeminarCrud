@@ -212,6 +212,10 @@ export class PatientTableComponent implements OnInit, OnDestroy {
     });
   }
 
+  getTotalCost(patientId: number) {
+    return this.patientService.getTreatmentsTotalCost(patientId);
+  }
+
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
