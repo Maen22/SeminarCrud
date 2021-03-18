@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Patient } from '../../shared/models/patient.model';
 import { Treatment } from '../../shared/models/treatment.model';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-patient-details',
@@ -12,7 +13,9 @@ import { Treatment } from '../../shared/models/treatment.model';
 export class PatientDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
-    private patientService: PatientService
+    private patientService: PatientService,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) {}
 
   id: number;
@@ -20,6 +23,10 @@ export class PatientDetailsComponent implements OnInit {
   patientDetails: Patient;
 
   treatments: Treatment[];
+
+  selectedTreatments: Treatment[];
+
+  treatmentDialog: boolean;
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params.id;
@@ -33,5 +40,26 @@ export class PatientDetailsComponent implements OnInit {
         this.treatments = data;
       })
       .catch((err) => console.log(err));
+  }
+
+  deleteTreatment(treatment: Treatment) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this Treatment?',
+      header: 'Confirm',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.treatments = this.treatments.filter(
+          (val) => val.treatmentId !== treatment.treatmentId
+        );
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Successful',
+          detail: 'Treatment Deleted',
+          life: 1500,
+        });
+      },
+    });
+
+    // Delete From API
   }
 }

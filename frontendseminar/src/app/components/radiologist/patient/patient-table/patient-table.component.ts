@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Patient } from '../../shared/models/patient.model';
-import { ConfirmationService } from 'primeng/api';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { PatientService } from '../patient.service';
 import { Subscription } from 'rxjs';
 import { TreatmentType } from '../../shared/models/treatment-type.model';

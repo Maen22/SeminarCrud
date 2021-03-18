@@ -5,6 +5,7 @@ export interface Treatment {
   createdAt?: Date;
   treatmentImageURl?: string;
 
+  name?: string;
   patientId?: number;
   treatmentTypeId?: number;
 }
