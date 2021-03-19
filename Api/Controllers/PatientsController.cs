@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api.Data;
 using Api.Models;
+using Api.Models.ViewModels;
 
 namespace Api.Controllers
 {
@@ -24,9 +25,34 @@ namespace Api.Controllers
 
         // GET: api/Patients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
+        public async Task<ActionResult<IEnumerable<PatientViewModel>>> GetPatients()
         {
-            return await _context.Patients.ToListAsync();
+
+            var patients = await _context.Patients.Include(p => p.Treatments)
+                .ToListAsync();
+
+            var result = new List<PatientViewModel>();
+            foreach (var patient in patients)
+            {
+                var totalCost = patient.Treatments.Sum(t => t.TreatmentCost);
+                result.Add(new PatientViewModel()
+                {
+                    PatientId = patient.PatientId,
+                    UserId = patient.UserId,
+                    Age = patient.Age,
+                    Gender = patient.Gender,
+                    FirstName = patient.FirstName,
+                    LastName = patient.LastName,
+                    PhoneNumber = patient.PhoneNumber,
+                    TotalTreatmentCost = totalCost
+                });
+            }
+
+            Console.WriteLine(result);
+
+            return Ok(result);
+
+
         }
 
         // GET: api/Patients/5

@@ -14,7 +14,7 @@
       <button
         pButton
         pRipple
-        [label]="Delete"
+        [label]="'Delete'"
         icon="pi pi-trash"
         class="p-button-danger"
         (click)="deleteSelectedPatients()"
@@ -68,6 +68,7 @@
         <span class="p-input-icon-left">
           <i class="pi pi-search"></i>
           <input
+            #i
             pInputText
             type="text"
             (input)="dt.filterGlobal($event.target.value, 'contains')"
@@ -125,7 +126,9 @@
         <td>{{ patient.age }}</td>
         <td>{{ patient.gender == 1 ? "Male" : "Female" }}</td>
         <td>{{ patient.createdAt | date: "yyyy-MM-dd" }}</td>
-        <td *ngIf="patients">{{ getTotalCost(patient.patientId) }}</td>
+        <td>
+          {{ patient.totalTreatmentCost | number: "1.1-2" | currency: "USD" }}
+        </td>
 
         <td>
           <button
@@ -258,7 +261,7 @@
         [showClear]="true"
       ></p-dropdown>
 
-      <small class="p-invalid" *ngIf="submitted && !patient.typeOfXRay"
+      <small class="p-invalid" *ngIf="submitted && !selectedTreatmentType.name"
         >type Of X-Ray is required.</small
       >
     </div>

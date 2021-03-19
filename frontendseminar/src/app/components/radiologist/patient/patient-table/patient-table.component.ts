@@ -7,10 +7,6 @@ import { Subscription } from 'rxjs';
 import { TreatmentType } from '../../shared/models/treatment-type.model';
 import { Treatment } from '../../shared/models/treatment.model';
 
-interface TypeXRay {
-  name: string;
-}
-
 @Component({
   selector: 'app-patient-table',
   templateUrl: './patient-table.component.html',
@@ -210,10 +206,6 @@ export class PatientTableComponent implements OnInit, OnDestroy {
         fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION
       );
     });
-  }
-
-  getTotalCost(patientId: number) {
-    return this.patientService.getTreatmentsTotalCost(patientId);
   }
 
   ngOnDestroy() {

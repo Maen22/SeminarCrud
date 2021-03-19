@@ -42,6 +42,8 @@ export class PatientDetailsComponent implements OnInit {
       .catch((err) => console.log(err));
   }
 
+  openNew() {}
+
   deleteTreatment(treatment: Treatment) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete this Treatment?',
@@ -62,4 +64,6 @@ export class PatientDetailsComponent implements OnInit {
 
     // Delete From API
   }
+
+  deleteSelectedPatients() {}
 }

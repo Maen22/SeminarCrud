@@ -9,6 +9,7 @@ export interface Patient {
   gender: number;
   phoneNumber: string;
   createdAt?: Date;
+  totalTreatmentCost?: number;
 
   treatments?: Treatment[];
 }

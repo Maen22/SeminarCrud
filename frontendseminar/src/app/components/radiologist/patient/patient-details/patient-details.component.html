@@ -15,11 +15,11 @@
       <button
         pButton
         pRipple
-        [label]="Delete"
+        [label]="'Delete'"
         icon="pi pi-trash"
         class="p-button-danger"
         (click)="deleteSelectedPatients()"
-        [disabled]="!selectedPatients || !selectedPatients.length"
+        [disabled]="!selectedTreatments || !selectedTreatments.length"
       ></button>
     </ng-template>
 
@@ -32,17 +32,6 @@
         chooseLabel="Import"
         class="p-mr-2 p-d-inline-block"
       ></p-fileUpload> -->
-      <button
-        pButton
-        pRipple
-        label="XSL"
-        icon="pi pi-download"
-        class="p-button-help"
-        (click)="exportExcel()"
-        class="p-button-success p-mr-2"
-        pTooltip="XLS"
-        tooltipPosition="bottom"
-      ></button>
     </ng-template>
   </p-toolbar>
 
@@ -115,7 +104,7 @@
         <td>{{ treatment.treatmentImageURl }}</td>
 
         <td>{{ treatment.name }}</td>
-        <td>{{ treatment.createdAt | data: "yyyy-MM-dd" }}</td>
+        <td>{{ treatment.createdAt | date: "yyyy-MM-dd" }}</td>
         <td>{{ treatment.treatmetCost | currency: "USD" }}</td>
 
         <td>
@@ -158,7 +147,7 @@
   <ng-template pTemplate="content">
     <div class="p-field">
       <label for="firstName">First Name</label>
-      <input
+      <!-- <input
         type="text"
         pInputText
         id="firstName"
@@ -166,14 +155,14 @@
         value=""
         required
         autofocus
-      />
-      <small class="p-invalid" *ngIf="submitted && !patient.firstName"
+      /> -->
+      <!-- <small class="p-invalid" *ngIf="submitted && !patient.firstName"
         >first Name is required.</small
-      >
+      > -->
     </div>
     <div class="p-field">
       <label for="lastName">last Name</label>
-      <input
+      <!-- <input
         type="text"
         pInputText
         id="lastName"
@@ -183,9 +172,9 @@
       />
       <small class="p-invalid" *ngIf="submitted && !patient.lastName"
         >last Name is required.</small
-      >
+      > -->
     </div>
-    <div class="p-field">
+    <!-- <div class="p-field">
       <label for="phoneNumber">phone Number</label>
       <input
         type="text"
@@ -194,8 +183,8 @@
         [(ngModel)]="patient.phoneNumber"
         required
         autofocus
-      />
-      <small class="p-invalid" *ngIf="submitted && !patient.phoneNumber"
+      /> -->
+    <!-- <small class="p-invalid" *ngIf="submitted && !patient.phoneNumber"
         >phone Number is required.</small
       >
     </div>
@@ -250,19 +239,19 @@
           locale="en-US"
           value="selectedTreatmentType.cost"
         ></p-inputNumber>
-      </div>
-      <!-- <div class="p-field p-col">
+      </div> -->
+    <!-- <div class="p-field p-col">
         <label for="quantity">Quantity</label>
         <p-inputNumber
           id="quantity"
           [(ngModel)]="patient.quantity"
         ></p-inputNumber>
       </div> -->
-    </div>
+    <!-- </div> -->
   </ng-template>
 
   <!-- Save and Cancel Dilog-->
-  <ng-template pTemplate="footer">
+  <!-- <ng-template pTemplate="footer">
     <button
       pButton
       pRipple
@@ -280,6 +269,7 @@
       (click)="savePatient()"
     ></button>
   </ng-template>
-</p-dialog>
+</p-dialog> -->
 
-<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
+  <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
+</p-dialog>
