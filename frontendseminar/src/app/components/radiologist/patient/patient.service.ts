@@ -10,6 +10,7 @@ import { Treatment } from '../shared/models/treatment.model';
 })
 export class PatientService {
   patientsChanged = new Subject<Patient>();
+  treatmentsChanged = new Subject<Treatment>();
 
   baseUrl = 'http://localhost:5000/';
 
@@ -71,10 +72,12 @@ export class PatientService {
       });
   }
 
-  craeteTreatment(treatment: Treatment) {
+  craeteTreatment(treatment: Treatment): void {
     console.log(treatment);
     this.http
-      .post<Patient>(this.baseUrl + 'api/treatments', treatment)
-      .subscribe();
+      .post<Treatment>(this.baseUrl + 'api/treatments', treatment)
+      .subscribe((result) => {
+        this.treatmentsChanged.next(result);
+      });
   }
 }

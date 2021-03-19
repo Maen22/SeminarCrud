@@ -112,6 +112,8 @@ export class PatientTableComponent implements OnInit, OnDestroy {
         });
       },
     });
+
+    // Delete From API
   }
 
   editPatient(patient: Patient) {
@@ -136,6 +138,8 @@ export class PatientTableComponent implements OnInit, OnDestroy {
         });
       },
     });
+
+    // Delete From API
   }
 
   hideDialog() {
