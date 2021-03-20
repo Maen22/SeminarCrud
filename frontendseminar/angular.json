@@ -31,7 +31,10 @@
               "node_modules/primeicons/primeicons.css",
               "node_modules/quill/dist/quill.snow.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/animejs/anime.min.js",
+              "node_modules/scrollreveal/dist/scrollreveal.min.js"
+            ]
           },
           "configurations": {
             "production": {

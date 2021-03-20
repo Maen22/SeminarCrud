@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api.Data;
@@ -27,7 +25,6 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PatientViewModel>>> GetPatients()
         {
-
             var patients = await _context.Patients.Include(p => p.Treatments)
                 .ToListAsync();
 
@@ -48,11 +45,7 @@ namespace Api.Controllers
                 });
             }
 
-            Console.WriteLine(result);
-
             return Ok(result);
-
-
         }
 
         // GET: api/Patients/5
@@ -110,10 +103,10 @@ namespace Api.Controllers
             patient.CreatedAt = DateTime.Now;
             Console.WriteLine(patient.CreatedAt);
             _context.Patients.Add(patient);
-            
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPatient", new { id = patient.PatientId }, patient);
+            return CreatedAtAction("GetPatient", new {id = patient.PatientId}, patient);
         }
 
         // DELETE: api/Patients/5

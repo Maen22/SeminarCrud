@@ -1,9 +1,19 @@
+import { HomeComponent } from './home/home.component';
 import { NgModule } from '@angular/core';
 
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { OktaCallbackComponent } from '@okta/okta-angular';
 
 const appRoutes: Routes = [
-  { path: '', redirectTo: 'patients', pathMatch: 'full' },
+  {
+    path: 'login/callback',
+    component: OktaCallbackComponent,
+  },
+
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+
+  { path: 'home', component: HomeComponent },
+
   {
     path: 'patients',
     loadChildren: () =>
