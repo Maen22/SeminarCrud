@@ -26,6 +26,7 @@ namespace Api.Controllers
         public async Task<ActionResult<IEnumerable<PatientViewModel>>> GetPatients()
         {
             var patients = await _context.Patients.Include(p => p.Treatments)
+                .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
 
             var result = new List<PatientViewModel>();
@@ -41,7 +42,8 @@ namespace Api.Controllers
                     FirstName = patient.FirstName,
                     LastName = patient.LastName,
                     PhoneNumber = patient.PhoneNumber,
-                    TotalTreatmentCost = totalCost
+                    TotalTreatmentCost = totalCost,
+                    CreatedAt = patient.CreatedAt
                 });
             }
 
@@ -106,7 +108,7 @@ namespace Api.Controllers
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPatient", new {id = patient.PatientId}, patient);
+            return CreatedAtAction("GetPatient", new { id = patient.PatientId }, patient);
         }
 
         // DELETE: api/Patients/5

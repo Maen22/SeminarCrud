@@ -1,6 +1,7 @@
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { Injectable } from '@angular/core';
+
 import { FileUpload } from './file-upload.model';
 
 @Injectable({
@@ -14,9 +15,7 @@ export class FileUploadService {
   ) {}
 
   async pushFileToStorage(fileUpload: FileUpload) {
-    // const uuid = this.uuidv4();
     const filePath = `${this.basePath}/${fileUpload.id}/${fileUpload.file.name}`;
-    //const storageRef = this.storage.ref(filePath);
     const uploadTask = await this.storage.upload(filePath, fileUpload.file);
 
     return await uploadTask.ref.getDownloadURL().then((downloadURL) => {
@@ -25,24 +24,9 @@ export class FileUploadService {
       this.saveFileData(fileUpload);
       return fileUpload;
     });
-    //   .snapshotChanges()
-    //   .pipe(
-    //     finalize(() => {
-    //       storageRef.getDownloadURL().subscribe((downloadURL) => {
-    //         fileUpload.url = downloadURL;
-    //         fileUpload.name = fileUpload.file.name;
-
-    //         this.saveFileData(fileUpload);
-    //       });
-    //     })
-    //   )
-    //   .subscribe();
-    // return uploadTask.percentageChanges();
   }
 
   getFiles(numberItems, userFolder): AngularFireList<FileUpload> {
-    // this.basePath + '/' + userFolder
-
     return this.db.list(this.basePath + '/' + userFolder, (ref) => {
       return ref.limitToLast(numberItems);
     });

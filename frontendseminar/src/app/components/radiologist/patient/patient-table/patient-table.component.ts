@@ -73,7 +73,7 @@ export class PatientTableComponent implements OnInit, OnDestroy {
       let t: Treatment = {
         patientId: this.newPatientId,
         userId: 'maen',
-        treatmetCost: this.selectedTreatmentType.defaultCost,
+        treatmentCost: this.selectedTreatmentType.defaultCost,
         treatmentTypeId: this.selectedTreatmentType.treatmentTypeId,
       };
 

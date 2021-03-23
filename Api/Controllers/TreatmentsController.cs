@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api.Data;
 using Api.Models;
+using Api.Models.ViewModels;
 
 namespace Api.Controllers
 {
@@ -31,9 +32,30 @@ namespace Api.Controllers
         [HttpGet("patient/{id}")]
         public async Task<ActionResult<IEnumerable<Treatment>>> GetTreatmentsByPatientId(int id)
         {
-            return await _context.Treatments
-                .Where(treatment => treatment.PatientId == id
-                ).ToListAsync();
+            var treatments = await _context.Treatments.Where(treatment => treatment.PatientId == id
+                ).Include(p => p.TreatmentType)
+                .ToListAsync();
+
+            var result = new List<TreatmentViewModel>();
+            foreach (var treatment in treatments)
+            {
+
+                result.Add(new TreatmentViewModel()
+                {
+                    TreatmentId = treatment.TreatmentId,
+                    UserId = treatment.UserId,
+                    TreatmentCost = treatment.TreatmentCost,
+                    CreatedAt = treatment.CreatedAt,
+                    TreatmentImageUrl = treatment.TreatmentImageUrl,
+                    TreatmentImageName = treatment.TreatmentImageName,
+                    PatientId = treatment.PatientId,
+                    TreatmentName = treatment.TreatmentType.Name,
+                    TreatmentTypeId = treatment.TreatmentTypeId
+                });
+            }
+
+
+            return Ok(result);
         }
 
         // GET: api/Treatments/5
@@ -86,10 +108,27 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Treatment>> PostTreatment(Treatment treatment)
         {
+            treatment.CreatedAt = DateTime.Now;
             _context.Treatments.Add(treatment);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTreatment", new {id = treatment.TreatmentId}, treatment);
+            var treatmentType = await _context.TreatmentTypes.FindAsync(treatment.TreatmentTypeId);
+
+
+            var result = new TreatmentViewModel()
+            {
+                TreatmentId = treatment.TreatmentId,
+                UserId = treatment.UserId,
+                TreatmentCost = treatment.TreatmentCost,
+                CreatedAt = treatment.CreatedAt,
+                TreatmentImageUrl = treatment.TreatmentImageUrl,
+                TreatmentImageName = treatment.TreatmentImageName,
+                PatientId = treatment.PatientId,
+                TreatmentName = treatmentType.Name,
+                TreatmentTypeId = treatment.TreatmentTypeId
+            };
+
+            return CreatedAtAction("GetTreatment", new { id = treatment.TreatmentId }, result);
         }
 
         // DELETE: api/Treatments/5

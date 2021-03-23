@@ -2,7 +2,7 @@ import { HomeComponent } from './home/home.component';
 import { NgModule } from '@angular/core';
 
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { OktaCallbackComponent } from '@okta/okta-angular';
+import { OktaCallbackComponent, OktaAuthGuard } from '@okta/okta-angular';
 
 const appRoutes: Routes = [
   {
@@ -16,6 +16,7 @@ const appRoutes: Routes = [
 
   {
     path: 'patients',
+    canActivate: [OktaAuthGuard],
     loadChildren: () =>
       import('./components/radiologist/patient/patient.module').then(
         (m) => m.PatientModule

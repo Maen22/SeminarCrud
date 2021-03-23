@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System;
 
 namespace Api.Models.ViewModels
 {
@@ -12,5 +13,6 @@ namespace Api.Models.ViewModels
         public Gender Gender { get; set; }
         public string PhoneNumber { get; set; }
         public decimal TotalTreatmentCost { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

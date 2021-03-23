@@ -100,9 +100,9 @@
           <p-tableCheckbox [value]="treatment"></p-tableCheckbox>
         </td>
         <td>
-          <a [href]="treatment.treatmentImageUrl">{{
-            treatment.treatmentImageName
-          }}</a>
+          <a [href]="treatment.treatmentImageUrl">
+            <img [src]="treatment.treatmentImageUrl" [alt]="treatment.treatmentImageName" width="80">
+          </a>
         </td>
 
         <td>{{ treatment.treatmentName }}</td>
