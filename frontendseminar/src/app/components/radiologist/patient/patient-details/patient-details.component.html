@@ -23,16 +23,16 @@
       ></button>
     </ng-template>
 
-    <ng-template pTemplate="right">
-      <!-- <p-fileUpload
+    <!-- <ng-template pTemplate="right">
+      <p-fileUpload
         mode="basic"
         accept="image/*"
         [maxFileSize]="1000000"
         label="Import"
         chooseLabel="Import"
         class="p-mr-2 p-d-inline-block"
-      ></p-fileUpload> -->
-    </ng-template>
+      ></p-fileUpload>
+    </ng-template> -->
   </p-toolbar>
 
   <p-table
@@ -49,7 +49,6 @@
   >
     <!-- ############################
   #################Caption /search##############
-
   -->
     <ng-template pTemplate="caption">
       <div class="p-d-flex p-ai-center p-jc-between">
@@ -69,7 +68,6 @@
 
     <!-- ############################
   ################# table header ##############
-
   -->
     <ng-template pTemplate="header">
       <tr>
@@ -101,11 +99,15 @@
         <td>
           <p-tableCheckbox [value]="treatment"></p-tableCheckbox>
         </td>
-        <td>{{ treatment.treatmentImageURl }}</td>
+        <td>
+          <a [href]="treatment.treatmentImageUrl">{{
+            treatment.treatmentImageName
+          }}</a>
+        </td>
 
-        <td>{{ treatment.name }}</td>
+        <td>{{ treatment.treatmentName }}</td>
         <td>{{ treatment.createdAt | date: "yyyy-MM-dd" }}</td>
-        <td>{{ treatment.treatmetCost | currency: "USD" }}</td>
+        <td>{{ treatment.treatmentCost | currency: "USD" }}</td>
 
         <td>
           <button
@@ -126,7 +128,6 @@
   </p-table>
 </div>
 <!--
-
   Dilog
   ####################################################################################################
   ####################################################################################################
@@ -144,114 +145,59 @@
   styleClass="p-fluid"
 >
   <!--  the content of the dilog form-->
+
+  <div class="p-field" *ngIf="selectedTreatmentType">
+    <label for="typeOfXRay">Type Of X-Ray</label>
+    <p-dropdown
+      [options]="treatmentTypes"
+      [(ngModel)]="selectedTreatmentType.name"
+      placeholder="Select a Type"
+      optionLabel="name"
+      optionValue="name"
+      [showClear]="true"
+    ></p-dropdown>
+
+    <!-- <small class="p-invalid" *ngIf="submitted && !patient.typeOfXRay"
+      >type Of X-Ray is required.</small
+    > -->
+  </div>
+
   <ng-template pTemplate="content">
     <div class="p-field">
-      <label for="firstName">First Name</label>
-      <!-- <input
+      <label for="treatmetCost">Treatmet Cost</label>
+      <input
         type="text"
         pInputText
-        id="firstName"
-        [(ngModel)]="patient.firstName"
+        id="treatmetCost"
+        [(ngModel)]="selectedTreatmentType.defaultCost"
         value=""
         required
         autofocus
-      /> -->
+      />
       <!-- <small class="p-invalid" *ngIf="submitted && !patient.firstName"
         >first Name is required.</small
       > -->
     </div>
     <div class="p-field">
-      <label for="lastName">last Name</label>
-      <!-- <input
-        type="text"
-        pInputText
-        id="lastName"
-        [(ngModel)]="patient.lastName"
-        required
-        autofocus
-      />
-      <small class="p-invalid" *ngIf="submitted && !patient.lastName"
-        >last Name is required.</small
-      > -->
-    </div>
-    <!-- <div class="p-field">
-      <label for="phoneNumber">phone Number</label>
       <input
-        type="text"
-        pInputText
-        id="phoneNumber"
-        [(ngModel)]="patient.phoneNumber"
-        required
-        autofocus
-      /> -->
-    <!-- <small class="p-invalid" *ngIf="submitted && !patient.phoneNumber"
-        >phone Number is required.</small
-      >
-    </div>
-    <div class="p-field">
-      <label for="age">age</label>
-      <input
-        type="number"
-        pInputText
-        id="age"
-        [(ngModel)]="patient.age"
-        required
-        autofocus
+        style="display: none"
+        type="file"
+        class="text-nowrap text-truncate"
+        (change)="selectFile($event)"
+        #fileInput
       />
-      <small class="p-invalid" *ngIf="submitted && !patient.age"
-        >age is required.</small
-      >
+      <p-button
+        label="Upload Image"
+        icon="pi pi-upload"
+        styleClass="p-button-success"
+        (click)="fileInput.click()"
+      ></p-button>
+      {{ fileName ? fileName : "" }}
     </div>
-    <div class="p-field">
-      <label for="gender">Gender</label>
-      <p-selectButton
-        [options]="stateGenderOptions"
-        [(ngModel)]="selectedgenderValue"
-        optionLabel="label"
-        optionValue="value"
-      ></p-selectButton>
-    </div>
-
-    <div class="p-field">
-      <label for="typeOfXRay">Type Of X-Ray</label>
-      <p-dropdown
-        [options]="treatmentTypes"
-        [(ngModel)]="selectedTreatmentType.name"
-        placeholder="Select a Type"
-        optionLabel="name"
-        optionValue="name"
-        [showClear]="true"
-      ></p-dropdown>
-
-      <small class="p-invalid" *ngIf="submitted && !patient.typeOfXRay"
-        >type Of X-Ray is required.</small
-      >
-    </div>
-
-    <div class="p-formgrid p-grid">
-      <div class="p-field p-col">
-        <label for="cost">Cost</label>
-        <p-inputNumber
-          id="cost"
-          [(ngModel)]="selectedTreatmentType.defaultCost"
-          mode="currency"
-          currency="USD"
-          locale="en-US"
-          value="selectedTreatmentType.cost"
-        ></p-inputNumber>
-      </div> -->
-    <!-- <div class="p-field p-col">
-        <label for="quantity">Quantity</label>
-        <p-inputNumber
-          id="quantity"
-          [(ngModel)]="patient.quantity"
-        ></p-inputNumber>
-      </div> -->
-    <!-- </div> -->
   </ng-template>
 
   <!-- Save and Cancel Dilog-->
-  <!-- <ng-template pTemplate="footer">
+  <ng-template pTemplate="footer">
     <button
       pButton
       pRipple
@@ -266,10 +212,9 @@
       label="Save"
       icon="pi pi-check"
       class="p-button-text"
-      (click)="savePatient()"
+      (click)="saveTreatment()"
     ></button>
   </ng-template>
-</p-dialog> -->
 
   <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
 </p-dialog>

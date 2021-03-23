@@ -1,9 +1,10 @@
 export interface Treatment {
   treatmentId?: number;
   userId: string;
-  treatmetCost: number;
+  treatmentCost: number;
   createdAt?: Date;
-  treatmentImageURl?: string;
+  treatmentImageUrl?: string;
+  treatmentImageName?: string;
 
   name?: string;
   patientId?: number;
