@@ -1,9 +1,7 @@
-import { finalize } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { Injectable } from '@angular/core';
 import { FileUpload } from './file-upload.model';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +22,7 @@ export class FileUploadService {
   async pushFileToStorage(fileUpload: FileUpload) {
     // const uuid = this.uuidv4();
     const filePath = `${this.basePath}/${fileUpload.id}/${fileUpload.file.name}`;
-    const storageRef = this.storage.ref(filePath);
+    //const storageRef = this.storage.ref(filePath);
     const uploadTask = await this.storage.upload(filePath, fileUpload.file);
 
     return await uploadTask.ref.getDownloadURL().then((downloadURL) => {
