@@ -147,6 +147,7 @@
             class="p-button-rounded p-button-success p-mr-2"
             (click)="editPatient(patient)"
           ></button>
+
           <button
             pButton
             pRipple
@@ -154,6 +155,7 @@
             class="p-button-rounded p-button-danger"
             (click)="deletePatient(patient)"
           ></button>
+
         </td>
       </tr>
     </ng-template>
@@ -251,7 +253,7 @@
       ></p-selectButton>
     </div>
 
-    <div class="p-field">
+    <div class="p-field" *ngIf="!isEditMode">
       <label for="typeOfXRay">Type Of X-Ray</label>
       <p-dropdown
         [options]="treatmentTypes"
@@ -260,14 +262,15 @@
         optionLabel="name"
         optionValue="name"
         [showClear]="true"
+
       ></p-dropdown>
 
-      <small class="p-invalid" *ngIf="submitted && !selectedTreatmentType.name"
+      <small class="p-invalid" *ngIf="submitted && !selectedTreatmentType.name && !isEditMode"
         >type Of X-Ray is required.</small
       >
     </div>
 
-    <div class="p-formgrid p-grid">
+    <div class="p-formgrid p-grid" *ngIf="!isEditMode">
       <div class="p-field p-col">
         <label for="cost">Cost</label>
         <p-inputNumber
@@ -277,15 +280,10 @@
           currency="USD"
           locale="en-US"
           value="selectedTreatmentType.cost"
+          *ngIf="!isEditMode"
         ></p-inputNumber>
       </div>
-      <!-- <div class="p-field p-col">
-        <label for="quantity">Quantity</label>
-        <p-inputNumber
-          id="quantity"
-          [(ngModel)]="patient.quantity"
-        ></p-inputNumber>
-      </div> -->
+
     </div>
   </ng-template>
 

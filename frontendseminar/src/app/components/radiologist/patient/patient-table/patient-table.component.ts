@@ -44,6 +44,8 @@ export class PatientTableComponent implements OnInit, OnDestroy {
 
   newPatientId: number;
 
+  isEditMode = false;
+
   constructor(
     private patientService: PatientService,
     private messageService: MessageService,
@@ -67,17 +69,26 @@ export class PatientTableComponent implements OnInit, OnDestroy {
     });
 
     this.sub = this.patientService.patientsChanged.subscribe((response) => {
-      this.patients = [...this.patients, response];
-      this.newPatientId = response.patientId;
+      const arr = this.patients.filter(
+        (p) => p.patientId == response.patientId
+      );
+      if (arr.length > 0) {
+        var indexOfModefied = this.patients.findIndex(
+          (p) => (p.patientId = response.patientId)
+        );
+        this.patients[indexOfModefied] = response;
+      } else {
+        this.patients = [...this.patients, response];
+        this.newPatientId = response.patientId;
+        let t: Treatment = {
+          patientId: this.newPatientId,
+          userId: 'maen',
+          treatmentCost: this.selectedTreatmentType.defaultCost,
+          treatmentTypeId: this.selectedTreatmentType.treatmentTypeId,
+        };
 
-      let t: Treatment = {
-        patientId: this.newPatientId,
-        userId: 'maen',
-        treatmentCost: this.selectedTreatmentType.defaultCost,
-        treatmentTypeId: this.selectedTreatmentType.treatmentTypeId,
-      };
-
-      this.patientService.craeteTreatment(t);
+        this.patientService.craeteTreatment(t);
+      }
     });
   }
 
@@ -119,6 +130,7 @@ export class PatientTableComponent implements OnInit, OnDestroy {
   editPatient(patient: Patient) {
     this.patient = { ...patient };
     this.patientDialog = true;
+    this.isEditMode = true;
   }
 
   deletePatient(patient: Patient) {
@@ -136,22 +148,23 @@ export class PatientTableComponent implements OnInit, OnDestroy {
           detail: 'Patient Deleted',
           life: 1500,
         });
+        this.patientService.deletePatient(patient.patientId);
       },
     });
-
-    // Delete From API
   }
 
   hideDialog() {
     this.patientDialog = false;
     this.submitted = false;
+    this.isEditMode = false;
   }
 
   savePatient() {
     this.submitted = true;
     if (this.patient.firstName && this.patient.firstName.trim()) {
-      // if edite
-      if (this.patient.patientId) {
+      // if edit
+      if (this.isEditMode) {
+        console.log('Hiii from edit!!');
         this.patient.gender = this.selectedgenderValue == 'Male' ? 1 : 0;
         this.messageService.add({
           severity: 'success',
@@ -159,29 +172,31 @@ export class PatientTableComponent implements OnInit, OnDestroy {
           detail: 'Patient Updated',
           life: 1500,
         });
+
+        this.patientService.editPatient(this.patient.patientId, this.patient);
+        this.patientDialog = false;
       }
       // if add
       else {
-        //this.patients.push(this.patient);
+        this.isEditMode = false;
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',
           detail: 'Patient Created',
           life: 1500,
         });
+
+        let p: Patient = {
+          userId: 'maen',
+          firstName: this.patient.firstName,
+          lastName: this.patient.lastName,
+          age: this.patient.age,
+          gender: this.selectedgenderValue == 'Male' ? 1 : 0,
+          phoneNumber: this.patient.phoneNumber,
+        };
+        this.patientService.createPatient(p);
+        this.patientDialog = false;
       }
-
-      let p: Patient = {
-        userId: 'maen',
-        firstName: this.patient.firstName,
-        lastName: this.patient.lastName,
-        age: this.patient.age,
-        gender: this.selectedgenderValue == 'Male' ? 1 : 0,
-        phoneNumber: this.patient.phoneNumber,
-      };
-
-      this.patientService.createPatient(p);
-      this.patientDialog = false;
     }
   }
 

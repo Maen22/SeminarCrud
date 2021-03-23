@@ -39,7 +39,7 @@ export class FileUploadService {
       })
       .catch((error) => console.log(error));
   }
-  private deleteFileStorage(name: string) {
+  public deleteFileStorage(name: string) {
     const storageRef = this.storage.ref(this.basePath);
     storageRef.child(name).delete();
   }

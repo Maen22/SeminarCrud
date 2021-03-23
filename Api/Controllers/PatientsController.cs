@@ -68,7 +68,7 @@ namespace Api.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPatient(int id, Patient patient)
+        public async Task<ActionResult<Patient>> PutPatient(int id, Patient patient)
         {
             if (id != patient.PatientId)
             {
@@ -93,7 +93,9 @@ namespace Api.Controllers
                 }
             }
 
-            return NoContent();
+            var result = await _context.Patients.FindAsync(id);
+
+            return result;
         }
 
         // POST: api/Patients

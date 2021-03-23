@@ -73,11 +73,27 @@ export class PatientService {
   }
 
   craeteTreatment(treatment: Treatment): void {
-    console.log(treatment);
     this.http
       .post<Treatment>(this.baseUrl + 'api/treatments', treatment)
       .subscribe((result) => {
         this.treatmentsChanged.next(result);
       });
+  }
+
+  editPatient(id: number, patient: Patient) {
+    this.http
+      .put<Patient>(this.baseUrl + `api/patients/${id}`, patient)
+      .subscribe((result) => {
+        console.log(result);
+        this.patientsChanged.next(result);
+      });
+  }
+
+  deletePatient(id: number) {
+    this.http.delete(this.baseUrl + `api/patients/${id}`).subscribe();
+  }
+
+  deleteTreatment(id: number) {
+    this.http.delete(this.baseUrl + `api/treatments/${id}`).subscribe();
   }
 }

@@ -1,3 +1,4 @@
+
 import { Subscription } from 'rxjs';
 import { PatientService } from './../patient.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -77,6 +78,7 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     this.submitted = false;
     this.treatmentDialog = true;
   }
+
   deleteTreatment(treatment: Treatment) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete this Treatment?',
@@ -92,13 +94,30 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
           detail: 'Treatment Deleted',
           life: 1500,
         });
+        this.patientService.deleteTreatment(treatment.treatmentId);
+        this.uploadService.deleteFileStorage(treatment.patientId + "/" +  treatment.treatmentImageName);
       },
     });
-
-    // Delete From API
   }
 
-  deleteSelectedPatients() {}
+  deleteSelectedTreatments() {
+  this.confirmationService.confirm({
+    message: 'Are you sure you want to delete the selected treatments?',
+    header: 'Confirm',
+    icon: 'pi pi-exclamation-triangle',
+    accept: () => {
+      this.treatments = this.treatments.filter(
+        (val) => !this.selectedTreatments.includes(val)
+      );
+      this.selectedTreatments = null;
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Successful',
+        detail: 'Patients Deleted',
+        life: 1500,
+      });
+    },
+  });}
 
   hideDialog() {
     this.treatmentDialog = false;
@@ -143,6 +162,12 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     this.treatmentDialog = false;
     // } end of first if
   }
+
+  editTreatment(treatment: Treatment) {
+    this.treatment = { ...treatment }
+    this.treatmentDialog = true
+  }
+
   //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Upload Image %%%%%%%%%%%%%%%%%%%%%%%%%%%
   selectedFiles?: FileList;
   currentFileUpload?: FileUpload;
