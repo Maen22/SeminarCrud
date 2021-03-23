@@ -1,4 +1,3 @@
-
 import { Subscription } from 'rxjs';
 import { PatientService } from './../patient.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -47,6 +46,8 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
 
   submitted: boolean;
 
+  isEditMode = false;
+
   ngOnInit(): void {
     this.id = this.route.snapshot.params.id;
     this.patientService.getPatient(this.id).then((data) => {
@@ -57,19 +58,27 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
       this.treatmentTypes = response;
 
       this.selectedTreatmentType = this.treatmentTypes[0];
-      console.log(this.selectedTreatmentType);
     });
 
     this.patientService
       .getTreatments(this.id)
       .then((data) => {
-        console.log('these are all the treatment: ', data);
         this.treatments = data;
       })
       .catch((err) => console.log(err));
 
     this.sub = this.patientService.treatmentsChanged.subscribe((response) => {
-      this.treatments.push(response);
+      const arr = this.treatments.filter(
+        (t) => t.treatmentId == response.treatmentId
+      );
+      if (arr.length > 0) {
+        var indexOfModefied = this.treatments.findIndex(
+          (p) => (p.treatmentId = response.treatmentId)
+        );
+        this.treatments[indexOfModefied] = response;
+      } else {
+        this.treatments = [response, ...this.treatments];
+      }
     });
   }
 
@@ -95,40 +104,60 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
           life: 1500,
         });
         this.patientService.deleteTreatment(treatment.treatmentId);
-        this.uploadService.deleteFileStorage(treatment.patientId + "/" +  treatment.treatmentImageName);
+        this.uploadService.deleteFileStorage(
+          treatment.patientId + '/' + treatment.treatmentImageName
+        );
       },
     });
   }
 
   deleteSelectedTreatments() {
-  this.confirmationService.confirm({
-    message: 'Are you sure you want to delete the selected treatments?',
-    header: 'Confirm',
-    icon: 'pi pi-exclamation-triangle',
-    accept: () => {
-      this.treatments = this.treatments.filter(
-        (val) => !this.selectedTreatments.includes(val)
-      );
-      this.selectedTreatments = null;
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Successful',
-        detail: 'Patients Deleted',
-        life: 1500,
-      });
-    },
-  });}
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete the selected treatments?',
+      header: 'Confirm',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.treatments = this.treatments.filter(
+          (val) => !this.selectedTreatments.includes(val)
+        );
+        this.selectedTreatments = null;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Successful',
+          detail: 'Patients Deleted',
+          life: 1500,
+        });
+      },
+    });
+  }
 
   hideDialog() {
     this.treatmentDialog = false;
     this.submitted = false;
+    this.isEditMode = false;
   }
   async saveTreatment() {
     this.submitted = true;
-    // if (this.patient.firstName && this.patient.firstName.trim()) {
     // if edite
-    if (this.treatment.treatmentId) {
-      // this.patient.gender = this.selectedgenderValue == 'Male' ? 1 : 0;
+    if (this.isEditMode) {
+      await this.upload().then((fileUpload) => {
+        let treatment: Treatment = {
+          treatmentId: this.treatment.treatmentId,
+          userId: 'maen',
+          patientId: this.id,
+          treatmentImageUrl: fileUpload.url,
+          treatmentImageName: fileUpload.name, // ask seif about it!!!
+          treatmentCost: this.selectedTreatmentType.defaultCost,
+          treatmentTypeId: this.selectedTreatmentType.treatmentTypeId,
+          createdAt: this.treatment.createdAt,
+        };
+
+        this.patientService.editTreatment(
+          this.treatment.treatmentId,
+          treatment
+        );
+      });
+
       this.messageService.add({
         severity: 'success',
         summary: 'Successful',
@@ -138,7 +167,19 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     }
     // if add
     else {
-      //this.patients.push(this.patient);
+      await this.upload().then((fileUpload) => {
+        let newTreatment: Treatment = {
+          userId: 'maen',
+          patientId: this.id,
+          treatmentImageUrl: fileUpload.url,
+          treatmentImageName: fileUpload.name, // ask seif about it!!!
+          treatmentCost: this.selectedTreatmentType.defaultCost,
+          treatmentTypeId: this.selectedTreatmentType.treatmentTypeId,
+        };
+        console.log('this is alll: ' + newTreatment);
+        this.patientService.craeteTreatment(newTreatment);
+      });
+
       this.messageService.add({
         severity: 'success',
         summary: 'Successful',
@@ -146,26 +187,17 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
         life: 1500,
       });
     }
-    await this.upload().then((fileUpload) => {
-      let newTreatment: Treatment = {
-        userId: 'maen',
-        patientId: this.id,
-        treatmentImageUrl: fileUpload.url,
-        treatmentImageName: fileUpload.name, // ask seif about it!!!
-        treatmentCost: this.selectedTreatmentType.defaultCost,
-        treatmentTypeId: this.selectedTreatmentType.treatmentTypeId,
-      };
-      console.log('this is alll: ' + newTreatment);
-      this.patientService.craeteTreatment(newTreatment);
-    });
 
+    this.isEditMode = false;
     this.treatmentDialog = false;
+
     // } end of first if
   }
 
   editTreatment(treatment: Treatment) {
-    this.treatment = { ...treatment }
-    this.treatmentDialog = true
+    this.treatment = { ...treatment };
+    this.treatmentDialog = true;
+    this.isEditMode = true;
   }
 
   //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Upload Image %%%%%%%%%%%%%%%%%%%%%%%%%%%

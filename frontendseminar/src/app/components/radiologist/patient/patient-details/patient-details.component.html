@@ -163,11 +163,12 @@
       optionLabel="name"
       optionValue="name"
       [showClear]="true"
+      [disabled]="isEditMode"
     ></p-dropdown>
   </div>
 
   <ng-template pTemplate="content">
-    <div class="p-field">
+    <div class="p-field" >
       <label for="treatmetCost">Treatmet Cost</label>
       <input
         type="text"
@@ -177,6 +178,7 @@
         value=""
         required
         autofocus
+        [disabled]="isEditMode"
       />
     </div>
 

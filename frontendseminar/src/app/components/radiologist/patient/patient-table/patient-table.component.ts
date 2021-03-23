@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-
 import { Patient } from '../../shared/models/patient.model';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { PatientService } from '../patient.service';
@@ -78,8 +77,10 @@ export class PatientTableComponent implements OnInit, OnDestroy {
         );
         this.patients[indexOfModefied] = response;
       } else {
-        this.patients = [...this.patients, response];
+        response.totalTreatmentCost = this.selectedTreatmentType.defaultCost;
+        this.patients = [response, ...this.patients];
         this.newPatientId = response.patientId;
+
         let t: Treatment = {
           patientId: this.newPatientId,
           userId: 'maen',

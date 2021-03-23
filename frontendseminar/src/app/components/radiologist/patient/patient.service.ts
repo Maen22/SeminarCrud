@@ -89,6 +89,15 @@ export class PatientService {
       });
   }
 
+  editTreatment(id: number, treatment: Treatment) {
+    console.log(treatment);
+    this.http
+      .put<Treatment>(this.baseUrl + `api/treatments/${id}`, treatment)
+      .subscribe((result) => {
+        this.treatmentsChanged.next(result);
+      });
+  }
+
   deletePatient(id: number) {
     this.http.delete(this.baseUrl + `api/patients/${id}`).subscribe();
   }

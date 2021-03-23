@@ -75,10 +75,11 @@ namespace Api.Controllers
         // PUT: api/Treatments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTreatment(int id, Treatment treatment)
+        public async Task<ActionResult<TreatmentViewModel>> PutTreatment(int id, Treatment treatment)
         {
             if (id != treatment.TreatmentId)
             {
+                System.Console.WriteLine("Hello from Error");
                 return BadRequest();
             }
 
@@ -100,7 +101,24 @@ namespace Api.Controllers
                 }
             }
 
-            return NoContent();
+            var treatmentType = await _context.TreatmentTypes.FindAsync(treatment.TreatmentTypeId);
+            var t = await _context.Treatments.FindAsync(id);
+
+
+            var result = new TreatmentViewModel()
+            {
+                TreatmentId = t.TreatmentId,
+                UserId = t.UserId,
+                TreatmentCost = t.TreatmentCost,
+                CreatedAt = t.CreatedAt,
+                TreatmentImageUrl = t.TreatmentImageUrl,
+                TreatmentImageName = t.TreatmentImageName,
+                PatientId = t.PatientId,
+                TreatmentName = treatmentType.Name,
+                TreatmentTypeId = t.TreatmentTypeId
+            };
+
+            return result;
         }
 
         // POST: api/Treatments

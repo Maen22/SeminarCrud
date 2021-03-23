@@ -253,7 +253,7 @@
       ></p-selectButton>
     </div>
 
-    <div class="p-field" *ngIf="!isEditMode">
+    <div class="p-field">
       <label for="typeOfXRay">Type Of X-Ray</label>
       <p-dropdown
         [options]="treatmentTypes"
@@ -262,7 +262,7 @@
         optionLabel="name"
         optionValue="name"
         [showClear]="true"
-
+        [disabled]="isEditMode"
       ></p-dropdown>
 
       <small class="p-invalid" *ngIf="submitted && !selectedTreatmentType.name && !isEditMode"
@@ -270,7 +270,7 @@
       >
     </div>
 
-    <div class="p-formgrid p-grid" *ngIf="!isEditMode">
+    <div class="p-formgrid p-grid">
       <div class="p-field p-col">
         <label for="cost">Cost</label>
         <p-inputNumber
@@ -280,7 +280,7 @@
           currency="USD"
           locale="en-US"
           value="selectedTreatmentType.cost"
-          *ngIf="!isEditMode"
+          [disabled]="isEditMode"
         ></p-inputNumber>
       </div>
 
