@@ -1,3 +1,4 @@
+import { OktaAuthService } from '@okta/okta-angular';
 import { MenuItem } from 'primeng/api';
 import { Component, OnInit } from '@angular/core';
 
@@ -7,26 +8,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./layout.component.css'],
 })
 export class LayoutComponent implements OnInit {
-  items: MenuItem[];
-  constructor() {}
+  itemsNav: MenuItem[];
+  itemsSideNav: MenuItem[];
+  constructor(private authService: OktaAuthService) {}
 
   ngOnInit() {
-    this.items = [
+    this.itemsNav = [
       {
-        label: 'Dashboard',
-        icon: 'pi pi-home',
+        label: '<img />',
+        escape: false,
+        style: {
+          'margin-left': '1000px',
+        },
       },
-
-      {
-        label: 'Patients',
-        icon: 'pi pi-fw pi-user',
-      },
-
-      {
-        label: 'Expenses',
-        icon: 'pi pi-dollar',
-      },
-
       {
         label: 'Settings',
         icon: 'pi pi-cog',
@@ -43,5 +37,26 @@ export class LayoutComponent implements OnInit {
         ],
       },
     ];
+
+    this.itemsSideNav = [
+      {
+        label: 'Dashboard',
+        icon: 'pi pi-home',
+      },
+
+      {
+        label: 'Patients',
+        icon: 'pi pi-fw pi-user',
+      },
+
+      {
+        label: 'Expenses',
+        icon: 'pi pi-dollar',
+      },
+    ];
+  }
+
+  logout() {
+    this.authService.signOut();
   }
 }
