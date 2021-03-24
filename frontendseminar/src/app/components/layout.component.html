@@ -1,5 +1,19 @@
-<p>
-  layout works!
-</p>
+<p-menubar [model]="items">
+  <div>
+    <button
+      type="button"
+      pButton
+      label="Logout"
+      icon="pi pi-power-off"
+      style="margin-left: 0.25em"
+    ></button>
+  </div>
+</p-menubar>
 
-<router-outlet></router-outlet>
+<div class="sidenav"></div>
+
+<div class="main">
+  <div class="p-shadow-5 container">
+    <router-outlet></router-outlet>
+  </div>
+</div>

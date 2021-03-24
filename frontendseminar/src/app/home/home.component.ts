@@ -148,7 +148,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   login() {
     this.oktaAuth.signInWithRedirect({
-      originalUri: '/patients',
+      originalUri: '/dash/patients',
     });
   }
   logout() {

@@ -1,0 +1,32 @@
+::ng-deep .ml-5 {
+  margin-left: 31em;
+}
+
+.main {
+  position: absolute;
+  left: 200px;
+}
+
+.container {
+  margin: 0 1.5em;
+
+  margin-top: 20px;
+  padding: 2em;
+  position: relative;
+}
+
+.sidenav {
+  background-color: white;
+  position: absolute;
+  top: 58px;
+  left: 0;
+  width: 200px;
+  height: 100%;
+  box-shadow: 5px 5px 15px lightgray;
+  padding: 0.2em;
+}
+
+::ng-deep .p-menubar {
+  border-bottom: 2px solid lightgray;
+  background-color: white;
+}
