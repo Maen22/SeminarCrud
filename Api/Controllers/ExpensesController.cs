@@ -10,7 +10,7 @@ using Api.Models;
 
 namespace Api.Controllers
 {
-    
+
     [Route("api/[controller]")]
     [ApiController]
     public class ExpensesController : ControllerBase
@@ -26,7 +26,7 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses()
         {
-            return await _context.Expenses.ToListAsync();
+            return await _context.Expenses.Include(e => e.ExpenseType).ToListAsync();
         }
 
         // GET: api/Expenses/5
